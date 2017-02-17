@@ -1,0 +1,21 @@
+c:\users\t-judamb\documents\visual studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\FinalSimu.csprojResolveAssemblyReference.cache
+c:\users\t-judamb\documents\visual studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+c:\users\t-judamb\documents\visual studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\FinalSimu.csproj.GenerateResource.Cache
+c:\users\t-judamb\documents\visual studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Presentacion.resources
+c:\users\t-judamb\documents\visual studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+c:\users\t-judamb\documents\visual studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+c:\users\t-judamb\documents\visual studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+c:\users\t-judamb\documents\visual studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+c:\users\t-judamb\documents\visual studio 2015\Projects\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
+C:\Users\t-judamb\Source\Repos\FinalSimu\FinalSimu\bin\Debug\WindowsFormsApplication1.exe.config
+C:\Users\t-judamb\Source\Repos\FinalSimu\FinalSimu\obj\Debug\WindowsFormsApplication1.exe
+C:\Users\t-judamb\Source\Repos\FinalSimu\FinalSimu\obj\Debug\WindowsFormsApplication1.pdb
+C:\Users\t-judamb\Source\Repos\FinalSimu\FinalSimu\obj\Debug\FinalSimu.csprojResolveAssemblyReference.cache
+C:\Users\t-judamb\Source\Repos\FinalSimu\FinalSimu\obj\Debug\WindowsFormsApplication1.Presentacion.resources
+C:\Users\t-judamb\Source\Repos\FinalSimu\FinalSimu\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\t-judamb\Source\Repos\FinalSimu\FinalSimu\obj\Debug\FinalSimu.csproj.GenerateResource.Cache
+C:\Users\t-judamb\Source\Repos\FinalSimu\FinalSimu\bin\Debug\WindowsFormsApplication1.exe
+C:\Users\t-judamb\Source\Repos\FinalSimu\FinalSimu\bin\Debug\WindowsFormsApplication1.pdb
+C:\Users\t-judamb\Source\Repos\FinalSimu\bin\Debug\WindowsFormsApplication1.exe.config
+C:\Users\t-judamb\Source\Repos\FinalSimu\obj\Debug\WindowsFormsApplication1.exe
+C:\Users\t-judamb\Source\Repos\FinalSimu\obj\Debug\WindowsFormsApplication1.pdb
