@@ -126,11 +126,11 @@
             this.lblTLP.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblTLP.AutoSize = true;
             this.lblTLP.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.lblTLP.Location = new System.Drawing.Point(34, 181);
+            this.lblTLP.Location = new System.Drawing.Point(32, 171);
             this.lblTLP.Name = "lblTLP";
-            this.lblTLP.Size = new System.Drawing.Size(234, 20);
+            this.lblTLP.Size = new System.Drawing.Size(238, 40);
             this.lblTLP.TabIndex = 3;
-            this.lblTLP.Text = "Tiempo de limpieza programada";
+            this.lblTLP.Text = "Tiempo de limpieza programada (segundos)";
             // 
             // lblGbSeguro
             // 
