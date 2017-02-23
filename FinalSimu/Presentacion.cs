@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace WindowsFormsApplication1
@@ -33,18 +34,25 @@ namespace WindowsFormsApplication1
         int cantidadLimpiezasUrgencia = 0;
         double tiempoTotalEntreLimpiezaUrgencia = 0;
         int totalDocumentosNoAlmacenados = 0;
+        double porcentajeDocumentosNoAlmacenados = 0;
+        double promedioTiempoEntreLimpiezas = 0;
+
+        //Milisegundos para calculo por día
+        double milisegDia = 32400000;
+        double milisegLimiteIAM = 18000000;
+
 
         private void btnSimular_Click(object sender, EventArgs e)
         {
+            tpLimpiezaProgramada = tiempoActual + (Convert.ToDouble(txtTLP.Text)*1000);
+            tpLlegada = (calcularLlegadaMañanera(tiempoActual));
+            //Ejecucion de simulacion teniendo en cuenta las variables de control
+            ejecutarSimulacion(Convert.ToInt32(txtGbAysa.Text), Convert.ToInt32(txtGbBanco.Text), Convert.ToInt32(txtGbSeguro.Text), Convert.ToDouble(txtTLP.Text), Convert.ToDouble(txtPorcentajeLimpieza.Text));
+            btnSimular.Text = "Volver a Simular";
             lblResultados.Visible = true;
             lblCVLU.Visible = true;
             lblPTE2LU.Visible = true;
             lblPDNA.Visible = true;
-            tpLimpiezaProgramada = tiempoActual + (Convert.ToDouble(txtTLP.Text)*1000);
-            tpLlegada = (calcularLlegadaMañanera(tiempoActual));
-            //Ejecucion de simulacion teniendo en cuenta las variables de control
-            ejecutarSimulacion(Convert.ToInt32(txtGbAysa.Text), Convert.ToInt32(txtGbBanco.Text), Convert.ToInt32(txtGbSeguro.Text), Convert.ToDouble(txtTLP.Text));
-            btnSimular.Text = "Volver a Simular";
         }
 
         private double calcularLlegadaMañanera(double tiempo)
@@ -106,7 +114,14 @@ namespace WindowsFormsApplication1
             }
             else totalDocumentosNoAlmacenados++;
         }
-        private void ejecutarSimulacion(int GbAysa, int GbBanco, int GbSeguro, double TLP)
+
+        private void reducirAlmacenamiento(double tiempo, double almacenamiento)
+        {
+            tiempoUltimaLimpiezaUrgencia = tiempo;
+            almacenamiento = almacenamiento * 0.9;
+            ILU = 0;
+        }
+        private void ejecutarSimulacion(int GbAysa, int GbBanco, int GbSeguro, double TLP, double PLV)
         {
             // 5 ESCENARIOS POSIBLES
 
@@ -115,8 +130,6 @@ namespace WindowsFormsApplication1
                 //1 - Entra por llegada de documento
                 tiempoActual += (tpLlegada - tiempoActual);
                 documentosTotales++;
-                double milisegDia = 32400000;
-                double milisegLimiteIAM = 18000000;
                 double horaAEvaluar = tiempoActual % milisegDia;
 
                 if (horaAEvaluar <= milisegLimiteIAM)
@@ -158,34 +171,50 @@ namespace WindowsFormsApplication1
 
             else if (tpLimpiezaProgramada <= tpLimpiezaAysa & tpLimpiezaProgramada <= tpLimpiezaSeguro & tpLimpiezaProgramada <= tpLimpiezaBanco)
             {
-                //2
+                //2 - Entra por limpieza programada
                 tiempoActual += tpLimpiezaProgramada;
+                tpLimpiezaProgramada += TLP;
+                almacenamientoAysa -= almacenamientoAysa* PLV/100;
+                almacenamientoBanco = almacenamientoBanco * PLV / 100;
+                almacenamientoSeguro = almacenamientoSeguro * PLV / 100;
             }
 
             else if (tpLimpiezaAysa <= tpLimpiezaBanco & tpLimpiezaAysa <= tpLimpiezaSeguro)
             {
-                //3
+                //3 - Entra por limpieza de urgencia de Aysa
                 tiempoActual += tpLimpiezaAysa;
+                reducirAlmacenamiento(tpLimpiezaAysa,almacenamientoAysa);
+
             }
 
             else if (tpLimpiezaBanco <= tpLimpiezaSeguro)
             {
                 //4
                 tiempoActual += tpLimpiezaBanco;
+                reducirAlmacenamiento(tpLimpiezaBanco, almacenamientoBanco);
             }
             
             else
             {
                 //5
                 tiempoActual += tpLimpiezaSeguro;
+                reducirAlmacenamiento(tpLimpiezaSeguro, almacenamientoSeguro);
             }
-          
 
 
-            while (tiempoActual < tiempoFinal)
+
+            if (tiempoActual >= tiempoFinal)
             {
-               
+                porcentajeDocumentosNoAlmacenados = totalDocumentosNoAlmacenados / documentosTotales * 100;
+
+                promedioTiempoEntreLimpiezas = tiempoTotalEntreLimpiezaUrgencia / cantidadLimpiezasUrgencia;
+
+                lblCVLU.Text = string.Concat(lblCVLU.Text, cantidadLimpiezasUrgencia.ToString());
+                lblPDNA.Text = string.Concat(lblPDNA.Text, porcentajeDocumentosNoAlmacenados.ToString());
+                lblPTE2LU.Text = string.Concat(lblPTE2LU, promedioTiempoEntreLimpiezas.ToString());
             }
+
+            else ejecutarSimulacion(GbAysa, GbBanco, GbSeguro, TLP, PLV);
         }
     }
 }

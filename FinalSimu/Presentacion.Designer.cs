@@ -44,6 +44,8 @@
             this.lblPDNA = new System.Windows.Forms.Label();
             this.lblResultados = new System.Windows.Forms.Label();
             this.btnSimular = new System.Windows.Forms.Button();
+            this.lblPorcentajeLimpieza = new System.Windows.Forms.Label();
+            this.txtPorcentajeLimpieza = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,6 +67,8 @@
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel1.Controls.Add(this.txtPorcentajeLimpieza, 1, 4);
+            this.tableLayoutPanel1.Controls.Add(this.lblPorcentajeLimpieza, 0, 4);
             this.tableLayoutPanel1.Controls.Add(this.txtTLP, 1, 3);
             this.tableLayoutPanel1.Controls.Add(this.txtGbBanco, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.txtGbSeguro, 1, 1);
@@ -73,13 +77,14 @@
             this.tableLayoutPanel1.Controls.Add(this.lblGbSeguro, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.lblGbAysa, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.txtGbAysa, 1, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(231, 131);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(231, 91);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 4;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel1.RowCount = 5;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(406, 221);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
@@ -87,7 +92,7 @@
             // 
             this.txtTLP.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtTLP.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.txtTLP.Location = new System.Drawing.Point(306, 178);
+            this.txtTLP.Location = new System.Drawing.Point(306, 139);
             this.txtTLP.Name = "txtTLP";
             this.txtTLP.Size = new System.Drawing.Size(94, 26);
             this.txtTLP.TabIndex = 7;
@@ -96,7 +101,7 @@
             // 
             this.txtGbBanco.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtGbBanco.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.txtGbBanco.Location = new System.Drawing.Point(306, 123);
+            this.txtGbBanco.Location = new System.Drawing.Point(306, 96);
             this.txtGbBanco.Name = "txtGbBanco";
             this.txtGbBanco.Size = new System.Drawing.Size(94, 26);
             this.txtGbBanco.TabIndex = 6;
@@ -105,7 +110,7 @@
             // 
             this.txtGbSeguro.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtGbSeguro.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.txtGbSeguro.Location = new System.Drawing.Point(306, 69);
+            this.txtGbSeguro.Location = new System.Drawing.Point(306, 53);
             this.txtGbSeguro.Name = "txtGbSeguro";
             this.txtGbSeguro.Size = new System.Drawing.Size(94, 26);
             this.txtGbSeguro.TabIndex = 5;
@@ -115,7 +120,7 @@
             this.lblGbBanco.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblGbBanco.AutoSize = true;
             this.lblGbBanco.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.lblGbBanco.Location = new System.Drawing.Point(20, 126);
+            this.lblGbBanco.Location = new System.Drawing.Point(20, 99);
             this.lblGbBanco.Name = "lblGbBanco";
             this.lblGbBanco.Size = new System.Drawing.Size(262, 20);
             this.lblGbBanco.TabIndex = 2;
@@ -126,7 +131,7 @@
             this.lblTLP.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblTLP.AutoSize = true;
             this.lblTLP.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.lblTLP.Location = new System.Drawing.Point(32, 171);
+            this.lblTLP.Location = new System.Drawing.Point(32, 132);
             this.lblTLP.Name = "lblTLP";
             this.lblTLP.Size = new System.Drawing.Size(238, 40);
             this.lblTLP.TabIndex = 3;
@@ -137,7 +142,7 @@
             this.lblGbSeguro.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblGbSeguro.AutoSize = true;
             this.lblGbSeguro.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.lblGbSeguro.Location = new System.Drawing.Point(17, 72);
+            this.lblGbSeguro.Location = new System.Drawing.Point(17, 56);
             this.lblGbSeguro.Name = "lblGbSeguro";
             this.lblGbSeguro.Size = new System.Drawing.Size(268, 20);
             this.lblGbSeguro.TabIndex = 1;
@@ -148,7 +153,7 @@
             this.lblGbAysa.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lblGbAysa.AutoSize = true;
             this.lblGbAysa.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.lblGbAysa.Location = new System.Drawing.Point(21, 18);
+            this.lblGbAysa.Location = new System.Drawing.Point(21, 13);
             this.lblGbAysa.Name = "lblGbAysa";
             this.lblGbAysa.Size = new System.Drawing.Size(260, 20);
             this.lblGbAysa.TabIndex = 0;
@@ -158,7 +163,7 @@
             // 
             this.txtGbAysa.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.txtGbAysa.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.txtGbAysa.Location = new System.Drawing.Point(306, 15);
+            this.txtGbAysa.Location = new System.Drawing.Point(306, 10);
             this.txtGbAysa.Name = "txtGbAysa";
             this.txtGbAysa.Size = new System.Drawing.Size(94, 26);
             this.txtGbAysa.TabIndex = 4;
@@ -167,7 +172,7 @@
             // 
             this.lblIngresar.AutoSize = true;
             this.lblIngresar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.lblIngresar.Location = new System.Drawing.Point(117, 131);
+            this.lblIngresar.Location = new System.Drawing.Point(103, 91);
             this.lblIngresar.Name = "lblIngresar";
             this.lblIngresar.Size = new System.Drawing.Size(72, 20);
             this.lblIngresar.TabIndex = 2;
@@ -221,13 +226,33 @@
             // 
             this.btnSimular.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.btnSimular.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-            this.btnSimular.Location = new System.Drawing.Point(231, 358);
+            this.btnSimular.Location = new System.Drawing.Point(326, 335);
             this.btnSimular.Name = "btnSimular";
             this.btnSimular.Size = new System.Drawing.Size(234, 88);
             this.btnSimular.TabIndex = 7;
             this.btnSimular.Text = "Simular";
             this.btnSimular.UseVisualStyleBackColor = false;
             this.btnSimular.Click += new System.EventHandler(this.btnSimular_Click);
+            // 
+            // lblPorcentajeLimpieza
+            // 
+            this.lblPorcentajeLimpieza.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblPorcentajeLimpieza.AutoSize = true;
+            this.lblPorcentajeLimpieza.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.lblPorcentajeLimpieza.Location = new System.Drawing.Point(22, 186);
+            this.lblPorcentajeLimpieza.Name = "lblPorcentajeLimpieza";
+            this.lblPorcentajeLimpieza.Size = new System.Drawing.Size(258, 20);
+            this.lblPorcentajeLimpieza.TabIndex = 8;
+            this.lblPorcentajeLimpieza.Text = "Porcentaje de limpieza programada";
+            // 
+            // txtPorcentajeLimpieza
+            // 
+            this.txtPorcentajeLimpieza.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.txtPorcentajeLimpieza.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.txtPorcentajeLimpieza.Location = new System.Drawing.Point(306, 183);
+            this.txtPorcentajeLimpieza.Name = "txtPorcentajeLimpieza";
+            this.txtPorcentajeLimpieza.Size = new System.Drawing.Size(94, 26);
+            this.txtPorcentajeLimpieza.TabIndex = 9;
             // 
             // Presentacion
             // 
@@ -269,5 +294,7 @@
         private System.Windows.Forms.Label lblPDNA;
         private System.Windows.Forms.Label lblResultados;
         private System.Windows.Forms.Button btnSimular;
+        private System.Windows.Forms.TextBox txtPorcentajeLimpieza;
+        private System.Windows.Forms.Label lblPorcentajeLimpieza;
     }
 }
