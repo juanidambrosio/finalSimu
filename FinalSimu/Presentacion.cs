@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms.DataVisualization.Charting;
 using System.Windows.Forms;
 
 namespace WindowsFormsApplication1
@@ -21,7 +22,7 @@ namespace WindowsFormsApplication1
         public double tpLimpiezaSeguro = Double.MaxValue;
         double tiempoActual = 0;
         double tiempoFinal = 162000000; // En milisegundos
-        int documentosTotales = 0;
+        double documentosTotales = 0;
         double tiempoUltimaLimpiezaUrgencia = 0;
 
         //Variables de estado
@@ -31,9 +32,9 @@ namespace WindowsFormsApplication1
         byte ILU = 0;
 
         //Resultados
-        int cantidadLimpiezasUrgencia = 0;
+        double cantidadLimpiezasUrgencia = 0;
         double tiempoTotalEntreLimpiezaUrgencia = 0;
-        int totalDocumentosNoAlmacenados = 0;
+        double totalDocumentosNoAlmacenados = 0;
         double porcentajeDocumentosNoAlmacenados = 0;
         double promedioTiempoEntreLimpiezas = 0;
 
@@ -41,69 +42,131 @@ namespace WindowsFormsApplication1
         double milisegDia = 32400000;
         double milisegLimiteIAM = 18000000;
 
+        //Variables de calculo
+        //TDD 
+        double alfaTamanio = 3.1911;
+        double betaTamanio = 106.81;
+        double gammaTamanio = 257.35;
+        //IAM
+        double aIAM = 497.29;
+        double bIAM = 4323.9;
+        double mIAM = 1016.6;
+        //IAT
+        double alfa1IAT = 1.1802;
+        double alfa2IAT = 1.0741;
+        double aIAT = 1000;
+        double bIAT = 4000;
+
+        Chart chart = new Chart();
 
         private void btnSimular_Click(object sender, EventArgs e)
         {
-            tpLimpiezaProgramada = tiempoActual + (Convert.ToDouble(txtTLP.Text)*1000);
-            tpLlegada = (calcularLlegadaMañanera(tiempoActual));
+            
+            tpLimpiezaProgramada = tiempoActual + (Convert.ToDouble(txtTLP.Text) * 1000);
+            tpLlegada = (calcularLlegadaMañanera());
             //Ejecucion de simulacion teniendo en cuenta las variables de control
-            ejecutarSimulacion(Convert.ToInt32(txtGbAysa.Text), Convert.ToInt32(txtGbBanco.Text), Convert.ToInt32(txtGbSeguro.Text), Convert.ToDouble(txtTLP.Text), Convert.ToDouble(txtPorcentajeLimpieza.Text));
+            while(tiempoActual< tiempoFinal)
+            {
+                ejecutarSimulacion(Convert.ToInt32(txtGbAysa.Text), Convert.ToInt32(txtGbBanco.Text), Convert.ToInt32(txtGbSeguro.Text), Convert.ToDouble(txtTLP.Text), Convert.ToDouble(txtPorcentajeLimpieza.Text));
+            }
+            porcentajeDocumentosNoAlmacenados = ( totalDocumentosNoAlmacenados / documentosTotales) * 100;
+
+            promedioTiempoEntreLimpiezas = tiempoTotalEntreLimpiezaUrgencia / cantidadLimpiezasUrgencia;
+
+            lblCVLU.Text = string.Concat(lblCVLU.Text, cantidadLimpiezasUrgencia.ToString());
+            lblPDNA.Text = string.Concat(lblPDNA.Text, porcentajeDocumentosNoAlmacenados.ToString());
+            lblPTE2LU.Text = string.Concat(lblPTE2LU.Text, promedioTiempoEntreLimpiezas.ToString());
+
             btnSimular.Text = "Volver a Simular";
             lblResultados.Visible = true;
             lblCVLU.Visible = true;
             lblPTE2LU.Visible = true;
             lblPDNA.Visible = true;
+            
+         
+         
         }
 
-        private double calcularLlegadaMañanera(double tiempo)
-        {
-            //Valores devueltos por el EasyFit para funcion de Frechet
-            double alfa = 3.2786;
-            double beta = 811.79;
-            double gama = 0;
+        private double calcularLlegadaMañanera()
+        {   
             Random x = new Random();
-            double random = x.Next(500, 3000);
-            double milisegundosAAgregar = calcularFuncionFretchet(alfa, beta, gama, random);
-            return milisegundosAAgregar + tiempo;
+            double miliSegundosAAgregar = x.Next(500, 3000);
+            Random y = new Random();
+            double random = y.NextDouble() * 0.138;
+            double probabilidad = calcularFuncionPert(aIAM,bIAM,miliSegundosAAgregar,mIAM);
+            if (random <= probabilidad)
+            {
+                return miliSegundosAAgregar;
+            }
+            else return calcularLlegadaMañanera();
 
         }
 
-        private double calcularFuncionFretchet(double alfa, double beta, double gama, double random)
-        {
-            double valorRetorno = (alfa / beta) * Math.Pow((beta / random - gama), alfa + 1) * Math.Exp(-(Math.Pow(beta / random - gama, alfa)));
-            return valorRetorno;
 
-        }
-
-        private double calcularLlegadaTardia(double tiempo)
+        private double calcularLlegadaTardia( )
         {
-            double alfa = 1.6946;
-            double beta = 647.9;
-            double gamma = 721.41;
             Random x = new Random();
-            double random = x.Next(750,4000);
-            double milisegundosAAgregar = calcularFuncionGamma(alfa, beta, gamma, random);
-            return milisegundosAAgregar + tiempo;
+            double miliSegundosAAgregar = x.Next(1000,4000);
+            Random y = new Random();
+            double random = y.NextDouble() * 0.087;
+            double probabilidad = calcularFuncionBeta(alfa1IAT, alfa2IAT, aIAT,bIAT, miliSegundosAAgregar);
+
+            if (random <= probabilidad)
+            {
+                return miliSegundosAAgregar;
+            }
+
+            else return calcularLlegadaTardia();
+            
+        }
+
+        private double calcularFuncionBeta(double alfa1, double alfa2, double a, double b, double random)
+        {
+            
+            double numerador = Math.Pow(random - a, alfa1 - 1) * Math.Pow(b - random, alfa2 - 1);
+            double denominador = chart.DataManipulator.Statistics.BetaFunction(alfa1, alfa2) * Math.Pow(b - a, alfa1 + alfa2 - 1);
+            return (numerador / denominador)*250;
         }
 
         private double calcularFuncionGamma(double alfa, double beta, double gamma, double random)
         {
-            double valorRetorno = (gamma / Math.Pow(alfa, beta)) * Math.Pow(random,beta-1)* Math.Exp(-Math.Pow((random/alfa),beta)); //Sin dividir por funcion gama
+           
+            double numerador = Math.Pow(random - gamma, alfa - 1) * Math.Exp(-(random - gamma) / beta);
+            double denominador = Math.Pow(beta, alfa) * chart.DataManipulator.Statistics.GammaFunction(alfa);
+            return (numerador/denominador)*100;
+        }
+
+        private double calcularFuncionPert(double a,double b, double random, double m)
+        {
+            
+            double alfa1 = (4*m + b - 5*a)/ (b - a);
+            double alfa2 = (5 * b - a - 4 * m) / (b - a);
+            double valorFuncionBeta = chart.DataManipulator.Statistics.BetaFunction(alfa1, alfa2);
+            double valorMultiplicado = (1 / valorFuncionBeta) * Math.Pow(random - a, alfa1 - 1) * Math.Pow(b - random, alfa2 - 1);
+            double valorRetorno = valorMultiplicado / Math.Pow(b - a, alfa1 + alfa2 - 1) * 200;
             return valorRetorno;
         }
 
         private double calcularTamanioDocumento()
         {
-            double alfa = 3.1911;
-            double beta = 106.81;
-            double gamma = 257.35;
+            double alfaTamanio = 3.1911;
+            double betaTamanio = 106.81;
+            double gammaTamanio = 257.35;
             Random x = new Random();
-            double random = x.Next(300, 1200);
-            double tamanioAAgregar = calcularFuncionGamma(alfa, beta, gamma, random);
-            return tamanioAAgregar/1024;
+            double tamanioAAgregar = x.Next(300, 1200);
+            Random y = new Random();
+            double random = y.NextDouble() * 0.2 ;
+            double probabilidad = calcularFuncionGamma(alfaTamanio, betaTamanio, gammaTamanio, tamanioAAgregar);
+
+            if (random <= probabilidad)
+            {
+                return tamanioAAgregar;
+            }
+
+            else return calcularTamanioDocumento();
         }
 
-        private void actualizarIndicadoresLimpiezaUrgencia(double tpLimpieza)
+        private double actualizarIndicadoresLimpiezaUrgencia(double tpLimpieza)
         {
             if (ILU == 0)
             {
@@ -113,6 +176,8 @@ namespace WindowsFormsApplication1
                 tiempoTotalEntreLimpiezaUrgencia += tiempoActual - tiempoUltimaLimpiezaUrgencia;
             }
             else totalDocumentosNoAlmacenados++;
+
+            return tpLimpieza;
         }
 
         private void reducirAlmacenamiento(double tiempo, double almacenamiento)
@@ -128,16 +193,16 @@ namespace WindowsFormsApplication1
             if (tpLlegada <= tpLimpiezaProgramada & tpLlegada <= tpLimpiezaAysa & tpLlegada <= tpLimpiezaBanco & tpLlegada <= tpLimpiezaSeguro)
             {
                 //1 - Entra por llegada de documento
-                tiempoActual += (tpLlegada - tiempoActual);
+                tiempoActual = tpLlegada;
                 documentosTotales++;
                 double horaAEvaluar = tiempoActual % milisegDia;
 
                 if (horaAEvaluar <= milisegLimiteIAM)
                 {
-                    tpLlegada = calcularLlegadaMañanera(tiempoActual);
+                    tpLlegada = tiempoActual + calcularLlegadaMañanera();
                 }
 
-                else tpLlegada = calcularLlegadaTardia(tiempoActual);
+                else tpLlegada = tiempoActual + calcularLlegadaTardia();
 
                 double tamanioDocumento = calcularTamanioDocumento();
                 Random x = new Random();
@@ -145,31 +210,31 @@ namespace WindowsFormsApplication1
                 //Random para saber a donde llega el documento
                 if (probabilidad <= 0.5)
                 {
-                    if (almacenamientoAysa + tamanioDocumento >= GbAysa * 1024)
+                    if (almacenamientoAysa + tamanioDocumento/1024 >= GbAysa * 1024)
                     {
-                        actualizarIndicadoresLimpiezaUrgencia(tpLimpiezaAysa);
+                       tpLimpiezaAysa = actualizarIndicadoresLimpiezaUrgencia(tpLimpiezaAysa);
                     }
-                    else almacenamientoAysa += tamanioDocumento;
+                    else almacenamientoAysa += tamanioDocumento/1024;
                 }
                 else if (probabilidad > 0.5 & probabilidad <= 0.8)
                 {
                     if (almacenamientoBanco + tamanioDocumento >= GbBanco * 1024)
                     {
-                        actualizarIndicadoresLimpiezaUrgencia(tpLimpiezaBanco);
+                       tpLimpiezaBanco = actualizarIndicadoresLimpiezaUrgencia(tpLimpiezaBanco);
                     }
-                    else almacenamientoBanco += tamanioDocumento;
+                    else almacenamientoBanco += tamanioDocumento/1024;
                 }
                 else
                 {
-                    if (almacenamientoSeguro + tamanioDocumento >= GbSeguro * 1024)
+                    if (almacenamientoSeguro + tamanioDocumento/1024 >= GbSeguro * 1024)
                     {
-                        actualizarIndicadoresLimpiezaUrgencia(tpLimpiezaSeguro);
+                       tpLimpiezaSeguro = actualizarIndicadoresLimpiezaUrgencia(tpLimpiezaSeguro);
                     }
-                    else almacenamientoSeguro += tamanioDocumento;
+                    else almacenamientoSeguro += tamanioDocumento/1024;
                 }
             }
 
-            else if (tpLimpiezaProgramada <= tpLimpiezaAysa & tpLimpiezaProgramada <= tpLimpiezaSeguro & tpLimpiezaProgramada <= tpLimpiezaBanco)
+            else if (tpLimpiezaProgramada <= tpLlegada & tpLimpiezaProgramada <= tpLimpiezaAysa & tpLimpiezaProgramada <= tpLimpiezaBanco & tpLimpiezaProgramada <= tpLimpiezaSeguro)
             {
                 //2 - Entra por limpieza programada
                 tiempoActual += tpLimpiezaProgramada;
@@ -179,7 +244,7 @@ namespace WindowsFormsApplication1
                 almacenamientoSeguro = almacenamientoSeguro * PLV / 100;
             }
 
-            else if (tpLimpiezaAysa <= tpLimpiezaBanco & tpLimpiezaAysa <= tpLimpiezaSeguro)
+            else if (tpLimpiezaAysa <= tpLlegada & tpLimpiezaAysa <= tpLimpiezaProgramada & tpLimpiezaAysa <= tpLimpiezaBanco & tpLimpiezaAysa <= tpLimpiezaSeguro)
             {
                 //3 - Entra por limpieza de urgencia de Aysa
                 tiempoActual += tpLimpiezaAysa;
@@ -187,7 +252,7 @@ namespace WindowsFormsApplication1
 
             }
 
-            else if (tpLimpiezaBanco <= tpLimpiezaSeguro)
+            else if (tpLimpiezaBanco <= tpLlegada & tpLimpiezaBanco <= tpLimpiezaProgramada & tpLimpiezaBanco <= tpLimpiezaAysa & tpLimpiezaBanco <= tpLimpiezaSeguro)
             {
                 //4
                 tiempoActual += tpLimpiezaBanco;
@@ -201,20 +266,6 @@ namespace WindowsFormsApplication1
                 reducirAlmacenamiento(tpLimpiezaSeguro, almacenamientoSeguro);
             }
 
-
-
-            if (tiempoActual >= tiempoFinal)
-            {
-                porcentajeDocumentosNoAlmacenados = totalDocumentosNoAlmacenados / documentosTotales * 100;
-
-                promedioTiempoEntreLimpiezas = tiempoTotalEntreLimpiezaUrgencia / cantidadLimpiezasUrgencia;
-
-                lblCVLU.Text = string.Concat(lblCVLU.Text, cantidadLimpiezasUrgencia.ToString());
-                lblPDNA.Text = string.Concat(lblPDNA.Text, porcentajeDocumentosNoAlmacenados.ToString());
-                lblPTE2LU.Text = string.Concat(lblPTE2LU, promedioTiempoEntreLimpiezas.ToString());
-            }
-
-            else ejecutarSimulacion(GbAysa, GbBanco, GbSeguro, TLP, PLV);
         }
     }
 }
